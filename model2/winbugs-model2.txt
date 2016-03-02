@@ -1,0 +1,28 @@
+model {
+	for (i in 1 : N.S) {
+        # Data
+		y[i] ~ dbin(psi[i], T[i])
+
+        # Individual parameters
+		logit(psi[i]) <- alpha[i]
+		alpha[i] ~ dnorm(mu[i], tau.alpha)
+        mu[i] <- beta0 + beta1 * z[i]
+	}
+	
+    # Group-level parameters
+	beta0 ~ dnorm(M.beta0, T.beta0) # prior on the intercept
+	T.beta0 <- pow(S.beta0, -2)
+
+	beta1 ~ dnorm(M.beta1, T.beta1) # prior on the slope
+	T.beta1 <- pow(S.beta1, -2)
+    
+	sigma.alpha ~ dunif(L.sigma.alpha, U.sigma.alpha) # prior on the unexplained variance (std. dev.)
+    tau.alpha <- pow(sigma.alpha, -2)
+	
+    # Predicted parameters
+    for (p in 1 : N.P) {
+        mu.pred[p] <- beta0 + beta1 * z.pred[p]
+        alpha.pred[p] ~ dnorm(mu.pred[p], tau.alpha)
+        logit(psi.pred[p]) <- alpha.pred[p]
+    }  
+}

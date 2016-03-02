@@ -1,0 +1,41 @@
+model {
+	for (i in 1 : N.O) {
+        # Data
+		y[i] ~ dbin(psi[i], T[i])
+
+        # Individual parameters
+		logit(psi[i]) <- alpha[i]
+		alpha[i] ~ dnorm(mu[i], tau.alpha)
+        mu[i] <- beta0 + beta1[l[i]] +  eta[s[i]]
+	}
+
+    # Subject-level random effects
+    for (j in 2 : N.S) {
+        eta[j] ~ dnorm(0, tau.eta) # Zero-mean random effects
+    }
+    eta[1] <- -sum(eta[2:N.S]) # Enforcing the sum-to-zero (STZ) constraint
+	
+    # Group-level parameters
+	beta0 ~ dnorm(M.beta0, T.beta0) # prior on the intercept (grand average)
+	T.beta0 <- pow(S.beta0, -2)
+    
+    for (k in 2 : N.L) {
+        beta1[k] ~ dnorm(M.beta1, T.beta1) # prior on the fixed effects
+    }
+    beta1[1] <- -sum(beta1[2:N.L]) # Enforcing the sum-to-zero (STZ) constraint
+	T.beta1 <- pow(S.beta1, -2)
+    
+	sigma.alpha ~ dunif(L.sigma.alpha, U.sigma.alpha) # prior on the unexplained variance (std. dev.)
+    tau.alpha <- pow(sigma.alpha, -2)
+
+	sigma.eta ~ dunif(L.sigma.eta, U.sigma.eta) # prior on the random effects std. dev.
+    tau.eta <- pow(sigma.eta, -2)
+	
+    # Predicted parameters
+    eta.pred ~ dnorm(0, tau.eta) # Predicted random effect
+    for (p in 1 : N.L) { # Predictions for all the levels of the factor
+        mu.pred[p] <- beta0 + beta1[p] + eta.pred
+        alpha.pred[p] ~ dnorm(mu.pred[p], tau.alpha)
+        logit(psi.pred[p]) <- alpha.pred[p]
+    }  
+}
