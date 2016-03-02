@@ -7,19 +7,18 @@ The code can be used to substitute the classical hypothesis testing with Bayesia
 ## Requirements
 
 The code relies on the freely available WinBUGS software to perform Bayesian inference using Markov chain Monte Carlo (MCMC) sampling.
-The WinBUGS software is distributed separately and can be obtained at:
+The WinBUGS software is distributed separately and can be obtained at:  
 http://www.mrc-bsu.cam.ac.uk/software/bugs/the-bugs-project-winbugs/
 
 It should also be possible to use the implemented models with other MCMC software based on the BUGS language, such as OpenBUGS or JAGS,
 but this has not yet been tested. Whereas OpenBUGS can be interfaced from MATLAB using the same interface which we used for WinBUGS
-(i.e. MATBUGS), to interface with JAGS it is necessary to use the MATJAGS interface available at:
+(i.e. MATBUGS), to interface with JAGS it is necessary to use the MATJAGS interface available at:  
 http://psiexp.ss.uci.edu/research/programs_data/jags/
 
 ## Usage
 
-The repository contains four models: one example model for simple normal data and three hierarchical models for different BCI experimental designs.
-
-The models for BCI performance are:
+The repository contains four models: one example model for simple normal data and three hierarchical models for different BCI experimental designs.  
+The models for BCI performance are:  
 **Model 1**
   * appropriate for an experiment where a group of subjects has used a BCI
   * for each subject the number of correct trials and total number of trials is needed
@@ -36,12 +35,12 @@ The models for BCI performance are:
   - this data would typically be analyzed with a matched t-test (if there are two conditions), or a repeated measures ANOVA (for multiple conditions)
   
 
-The folder of each model has the following contents:
-./data/
-simulate_modelN_data.m
-winbugs-modelN.txt
-run_modelN.m
-inspect_modelN_results.m
+The folder of each model has the following contents:  
+./data/  
+simulate_modelN_data.m  
+winbugs-modelN.txt  
+run_modelN.m  
+inspect_modelN_results.m  
 
 with N = 0, 1, 2, 3.
 
