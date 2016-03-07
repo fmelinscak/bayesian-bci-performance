@@ -1,6 +1,6 @@
 # Bayesian BCI performance
 
-In this repository you can find the MATLAB code that accompanies the paper "Beyond p-values in the evaluation of brain-computer interfaces" (preprint coming soon).
+In this repository you can find the MATLAB code that accompanies the paper "Beyond p-values in the evaluation of brain-computer interfaces" (preprint available at: https://doi.org/10.7287/peerj.preprints.1828v1).
 The implemented models can be used to analyze experimentally obtained brain-computer interface (BCI) classification accuracies.
 The code can be used to substitute the classical hypothesis testing with Bayesian estimation of hierarchical models.
 
