@@ -1,0 +1,15 @@
+model {
+	for (i in 1 : N) {
+        # Data
+		y[i] ~ dnorm(mu, tau) # normal distribution defined by mean and precision (i.e. 1/variance)
+	}
+	
+    # Parameters (priors)
+    mu ~ dnorm(M.mu, T.mu) # prior on the population mean
+    T.mu <- pow(S.mu, -2)
+    sigma ~ dunif(L.sigma, U.sigma) # prior on the population std. dev.
+    tau <- pow(sigma, -2) # transformation from std. dev. to precision
+    
+	# Predicted data
+    y.pred ~ dnorm(mu, tau)
+}

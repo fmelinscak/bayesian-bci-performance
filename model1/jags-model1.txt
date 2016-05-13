@@ -1,0 +1,21 @@
+model {
+	for (i in 1 : N.S) {
+        # Data
+		y[i] ~ dbin(psi[i], T[i])
+
+        # Individual parameters
+		logit(psi[i]) <- alpha[i]
+		alpha[i] ~ dnorm(mu.alpha, tau.alpha)
+	}
+	
+    # Group-level parameters
+	mu.alpha ~ dnorm(M.mu.alpha, T.mu.alpha) # prior on the group mean
+	T.mu.alpha <- pow(S.mu.alpha, -2)
+    
+    sigma.alpha ~ dunif(L.sigma.alpha, U.sigma.alpha) # prior on the group variance (std. dev.)
+    tau.alpha <- pow(sigma.alpha, -2)
+	
+    # Predicted parameters
+    alpha.pred ~ dnorm(mu.alpha, tau.alpha)
+    logit(psi.pred) <- alpha.pred
+}

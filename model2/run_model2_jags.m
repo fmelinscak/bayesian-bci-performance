@@ -4,23 +4,21 @@
 % ***
 
 %% Imports
-addpath(fullfile('..', 'external', 'matbugs')); % add matbugs
+addpath(fullfile('..', 'external', 'matjags')); % add matjags
 
 
 %% Parameters of the analysis
-PATH_BUGS = fullfile('C:','WinBUGS14'); % !!! IMPORTANT: set the path to the WinBUGS installation
 PATH_DATA = fullfile('./data');
 FILENAME_DATA = 'Blankertz2010.csv'; % filename of the data to be analyzed
-FILENAME_MODEL = 'winbugs-model2.txt'; % WinBUGS model used for analysis
-FILENAME_SAVE = 'Blankertz2010_MCMCsample.mat'; % filename for saving the MCMC sample to disk
+FILENAME_MODEL = 'jags-model2.txt'; % JAGS model used for analysis
+FILENAME_MCMC = 'Blankertz2010_MCMCsample.mat'; % filename for saving the MCMC sample to disk
 SAVE_SAMPLE = true; % whether to save the MCMC sample to disk
 
-viewWinBUGS = 1; % 1 - leave WinBUGS open after sampling; 0 - close WinBUGS after sampling
 
 paramsToMonitor = ... % Parameters whose samples are recorded during MCMC
-    {'beta0', 'beta1', 'sigma_alpha',...  % Group-level parameters
+    {'beta0', 'beta1', 'sigma.alpha',...  % Group-level parameters
     'alpha', 'psi',...              % Individual parameters
-    'mu_pred', 'alpha_pred', 'psi_pred'};      % Predicted parameters
+    'mu.pred', 'alpha.pred', 'psi.pred'};      % Predicted parameters
 
 
 % MCMC parameters
@@ -95,25 +93,29 @@ for i = 1 : nChains
     initStructs(i) = S; % initStructs has the initial values for all the Markov chains
 end
     
-%% Calling BUGS to obtain the MCMC sample
-fprintf( 'Running BUGS...\n' );
+%% Calling JAGS to obtain the MCMC sample
+fprintf( 'Running JAGS...\n' );
 tic
-[samples, stats] = matbugs(dataStruct, ...
-  fullfile(pwd, FILENAME_MODEL), ...
-  'init', initStructs, ...
-  'nchains', nChains, ...
-  'nburnin', nBurnin, ...
-  'nsamples', nSamples,...
-  'nthin', nThin,...
-  'view', viewWinBUGS,...
-  'monitorParams', paramsToMonitor, ...
-  'Bugdir', PATH_BUGS);
+[samples, stats, ~] = matjags( ... 
+    dataStruct, ...                     % Observed data
+    fullfile(pwd, FILENAME_MODEL), ...    % File that contains model definition
+    initStructs, ...                          % Initial values for latent variables
+    'doparallel' , 0, ...      % Parallelization flag
+    'nchains', nChains,...              % Number of MCMC chains
+    'nburnin', nBurnin,...              % Number of burnin steps
+    'nsamples', nSamples, ...           % Number of samples to extract
+    'thin', nThin, ...                      % Thinning parameter
+    'monitorparams', paramsToMonitor, ...     % List of latent variables to monitor
+    'savejagsoutput' , 0, ...          % Save command line output produced by JAGS?
+    'workingdir' , 'tmpjags' ,...
+    'verbosity' , 1, ...               % 0=do not produce any output; 1=minimal text output; 2=maximum text output
+    'cleanup' , 0);                    % clean up of temporary files?
 toc
 
 
 %% Save the MCMC sample
 if SAVE_SAMPLE
-    save(FILENAME_SAVE,...
+    save(FILENAME_MCMC,...
         'samples', 'stats', 'nChains', 'nSamples', 'z_pred', 'x_pred', 'N_P')
 end
 
