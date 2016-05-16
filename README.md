@@ -40,8 +40,8 @@ The folder of each model has the following contents:
 simulate_modelN_data.m  
 winbugs-modelN.txt  
 run_modelN_winbugs.m  
-jags-modelN.txt
-run_modelN_jags.m
+jags-modelN.txt  
+run_modelN_jags.m  
 inspect_modelN_results.m  
 
 with N = 0, 1, 2, 3.
@@ -75,7 +75,7 @@ If that happens to be the case with your configuration, try to replace the funct
 
 Using the WinBUGS version of scripts and models, the code should also be able to run directly with OpenBUGS but we have not yet tested this.
 
-Should you want to use the BUGS models in R or Python, you will still need JAGS and a corresponding interface (either rjags package for R or the PyJAGS package for Python).
+I you want to use the BUGS models in R or Python, you will still need JAGS and a corresponding interface (either rjags package for R or the PyJAGS package for Python).
 You will also need to translate the simulate_modelN_data, run_modelN_jags, and inspect_modelN_results scripts, to simulate data, infer parameters, and plot results, respectively.
 We welcome pull requests with R or Python translations.
 
